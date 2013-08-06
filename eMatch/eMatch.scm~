@@ -13,35 +13,29 @@
     [(_ expr (p0 f ...) e1 ...)
      (eMatch-H expr p0 (begin f ...) (eMatch expr e1 ...))]
     [(_ e ...)
-     (error 'eMatch "Wow, there are so many different ways you could succeed. And yet you fail...")]))
+     (error 'eMatch "Wow, there are so many different ways you could succeed. And you fail...")]))
 
 (define-syntax eMatch-H
   (syntax-rules (quote +++)
-    [(_ e0 (+++ p0 ...) f cont)
-     #t]
+    [(_ ((e0 e1 ...) e2 ...) ((+++ p0 ...) p1 ...) f cont)
+     (eMatch-H (e2 ...) (p1 ...) f cont)]
     [(_ (e0) (p0) f cont)
      (let ((return (Check e0 p0)))
        (if (equal? (quote e0) return)
            f
            cont))]
-    [(_ ((e0 ...) e1 ...) ((p0 ...) p1 ...) f cont)
-     (if (eMatch-H (e0 ...) (p0 ...) f #f)
-         (eMatch-H (e1 ...) (p1 ...) f cont)
-         cont)]
     [(_ (e0 e1 ...) (p0 p1 ...) f cont)
      (let ((return (Check e0 p0)))
        (if (equal? (quote e0) return)
            (eMatch-H (e1 ...) (p1 ...) f cont)
            cont))]
-    [(_ (e0 e1 ...) (+++ p1 ...) f cont)
-     f]
     [(_ e0 p0 f cont)
      (let ((return (Check e0 p0)))
        (if (equal? (quote e0) return)
            f
            cont))]
     [(_ e ...)
-     (error 'eMatch-H "Well, this is clearly wrong...")]))
+     (error 'eMatch-H "Well, shit. This is clearly wrong...")]))
 
 (define-syntax Check
   (syntax-rules (unquote quote +++)
