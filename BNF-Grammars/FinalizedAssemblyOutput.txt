@@ -1,0 +1,69 @@
+
+UNLESS OTHERWISE NOTED, CONSTANTS MUST BE 32-BIT
+
+- .DATA
+	<name> <DB> <value8>  	;value8 refers to 8 bit value
+	<name> <DW> <value16>	;value16 refers to 16 bit value
+	<name> <DD> <value32>	;value32 refers to 32 bit value
+
+- movq  <reg>, <reg>
+	<mem>, <reg>
+	<reg>, <mem>
+	<const>, <reg>
+	<const>, <mem>
+
+- leaq  <mem>, <reg>
+
+- addq  <reg>, <reg>
+	<mem>, <reg>
+	<reg>, <mem>
+	<const>, <reg>
+	<const>, <mem>
+
+- subq  <reg>, <reg>
+	<mem>, <reg>
+	<reg>, <mem>
+	<const>, <reg>
+	<const>, <mem>
+
+- imulq <reg>, <reg>
+	<mem>, <reg>
+	<const>, <reg>
+
+- idivq <reg>			;Quotient  -> rax
+	<mem>			;Remainder -> rdx
+
+- andq  <reg>, <reg>
+	<mem>, <reg>
+	<reg>, <mem>
+	<const>, <reg>
+	<const>, <mem>
+
+- orq   <reg>, <reg>
+	<mem>, <reg>
+	<reg>, <mem>
+	<const>, <reg>
+	<const>, <mem>
+
+- sarq  <const8>, <reg>
+	<const8>, <mem>
+
+- cmpq  <reg>, <reg>
+	<mem>, <reg>
+	<reg>, <mem>
+	<const>, <reg>
+	<const>, <mem>
+
+- je 	<label>
+
+- jne 	<label>
+
+- jl 	<label>
+
+- jle 	<label>
+
+- lg 	<label>
+
+- jge 	<label>
+
+- jmp 	<label>

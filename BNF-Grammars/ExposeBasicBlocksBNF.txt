@@ -1,0 +1,50 @@
+
+
+
+
+- Program :: (Start (<Global>*) (<Main> <Method>*))
+
+- Global  :: (Name <Size> <Content>)
+
+- Size	  :: DB
+ 	  -- DW
+	  -- DD
+
+- Content :: value8
+	  -- value16
+	  -- value32
+
+- Main	  :: (Main Tail)
+
+- Method  :: (Label Tail)
+
+- Tail	  :: (Begin <Effect>* <Tail>)
+	  -- (if <Pred> <Tail> <Tail>)
+	  -- (Jump Label)
+
+- Effect  :: (Begin <Effect>* <Effect>)
+	  -- (if <Pred> <Effect> <Effect>)
+	  -- (Cmd <Var> (<Op> <Var> <Triv>))
+
+- Pred	  :: (Begin <Effect>* <Pred>)
+	  -- (if <Pred> <Pred> <Pred>)
+	  -- (<Pred> <Var> <Triv>)
+
+- PredOp  :: <
+	  -- <=
+	  -- ==
+	  -- >=
+	  -- >
+	  -- and
+	  -- or
+	  -- not
+
+- Triv    :: <Var>
+	  -- int32
+	  -- Value	
+ 
+- Var	  :: (mem <value> int32)
+	  -- register
+
+- Value	  :: register
+	  -- Name

@@ -1,0 +1,48 @@
+
+
+
+
+- Program :: (Start (<Global>*) (<Main> <Method>*))
+
+- Global  :: (Name <Size> <Content>)
+
+- Size	  :: DB
+ 	  -- DW
+	  -- DD
+
+- Content :: value8
+	  -- value16
+	  -- value32
+
+- Main	  :: (Main Tail)
+
+- Method  :: (Label Tail)
+
+- Tail	  :: (Begin <Effect>* <JumpEx>)
+
+- Effect  :: (Cmd <Var> (<Op> <Var> <Triv>))
+	  -- (ShftRt int8 <Var>)
+
+- JumpEx  :: (if (<Pred> <Var> <Triv>)
+		 (Jump Label)
+		 (Jump Label))
+	  -- (Jump Label)
+
+- Pred	  :: <
+	  -- <=
+	  -- ==
+	  -- >=
+	  -- >
+	  -- and
+	  -- or
+	  -- not
+
+- Triv    :: <Var>
+	  -- int32
+	  -- Value	
+ 
+- Var	  :: (mem <value> int32)
+	  -- register
+
+- Value	  :: register
+	  -- Name
