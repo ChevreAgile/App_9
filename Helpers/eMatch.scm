@@ -79,8 +79,10 @@
   (syntax-rules (quote *** unquote)
     [(_ e0 *** f cont)
      (let ((*** e0)) f)]
-    [(_ e0 (*** p0 ...) f cont)
-     (let ((*** (quote e0))) f)]
+    [(_ ((quote e0) e1 ...) (*** p0 ...) f cont)
+     (let ((*** (quote e0))) f cont)]
+    [(_ (e0 ...) (*** p0 ...) f cont)
+     (let ((*** (quote (e0 ...)))) f)]
     [(_ (e0 e1 ...) ((unquote p0) p1 ...) f cont)
      (eMatch-H (e1 ...) (p1 ...) (let ((p0 e0)) f) cont)]
     [(_ (e0 e1 ...) (p0 p1 ...) f cont)
