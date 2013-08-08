@@ -1,5 +1,4 @@
-;Currently this thing REALLY sucks. It's better than nothing, but it doesn't yet support the binding of variables
-;from the pattern expressions to the application expressions
+;Currently this thing REALLY sucks. It's better than nothing, but it is still SUPER slow
 ;
 ;
 ;Here's some examples of how it works
