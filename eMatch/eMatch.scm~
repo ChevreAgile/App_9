@@ -99,4 +99,4 @@
          (quote e)
          #f)]
     [(_ e ...)
-     (error 'Check "You idiot, you literally had one job. One job. Just one...\n Seriously though, you shouldn't even be able to get this error message. What the shit...")]))
+     (error 'Check "You shouldn't even be able to get this error message. What the shit...")]))

@@ -53,50 +53,47 @@
      e0]
     [(_ expr (p0 (req cl ...) f ...) cont ...)
      (if (and cl ...)
-         (eMatch-H expr p0 (begin f ...) (eMatch expr cont ...))
+         (let ((decide (eMatch-H expr p0 (begin f ...) 'Match-Failure)))
+           (if (not (equal? decide 'Match-Failure))
+               (eMatch-H expr p0 (begin f ...) (void))
+               (eMatch expr cont ...)))
          (eMatch expr cont ...))]
-    [(_ expr (p0 f ...) e1 ...)
-     (eMatch-H expr p0 (begin f ...) (eMatch expr e1 ...))]
+    [(_ expr (p0 f ...) cont ...)
+     (let ((decide (eMatch-H expr p0 (begin f ...) 'Match-Failure)))
+       (if (not (equal? decide 'Match-Failure))
+           decide
+           (eMatch expr cont ...)))]
     [(_ e ...)
      (error 'eMatch "Wow, there are so many different ways you could succeed. And yet you fail...")]))
 
 (define-syntax eMatch-H
-  (syntax-rules (quote +++)
-    [(_ e0 (+++ p0 ...) f cont)
-     #t]
-    [(_ (e0) (p0) f cont)
-     (let ((return (Check e0 p0)))
-       (if (equal? (quote e0) return)
-           f
-           cont))]
-    [(_ ((e0 ...) e1 ...) ((p0 ...) p1 ...) f cont)
-     (if (eMatch-H (e0 ...) (p0 ...) f #f)
-         (eMatch-H (e1 ...) (p1 ...) f cont)
-         cont)]
+  (syntax-rules (quote *** unquote)
+    [(_ e0 *** f cont)
+     (let ((*** e0)) f)]
+    [(_ (e0 ...) (*** p0 ...) f cont)
+     (let ((*** (quote (e0 ...)))) f)]
+    [(_ (e0 e1 ...) ((unquote p0) p1 ...) f cont)
+     (eMatch-H (e1 ...) (p1 ...) (let ((p0 e0)) f) cont)]
     [(_ (e0 e1 ...) (p0 p1 ...) f cont)
-     (let ((return (Check e0 p0)))
-       (if (equal? (quote e0) return)
-           (eMatch-H (e1 ...) (p1 ...) f cont)
-           cont))]
-    [(_ (e0 e1 ...) (+++ p1 ...) f cont)
-     f]
+     (if (Valid? (quote e0) (quote p0))
+         (if (Match? (quote e0) (quote p0))
+             (eMatch-H (e1 ...) (p1 ...) f cont)
+             cont)
+         (let ((result (eMatch-H e0 p0 (eMatch-H (e1 ...) (p1 ...) f 'Match-Failure) 'Match-Failure)))
+           (if (equal? result 'Match-Failure)
+               cont
+               result)))]
+    [(_ e0 (unquote p0) f cont)
+     (let ((p0 e0)) f)]
     [(_ e0 p0 f cont)
-     (let ((return (Check e0 p0)))
-       (if (equal? (quote e0) return)
-           f
-           cont))]
-    [(_ e ...)
-     (error 'eMatch-H "Well, this is clearly wrong...")]))
+     (if (Match? (quote e0) (quote p0))
+         f
+         cont)]))
 
-(define-syntax Check
-  (syntax-rules (unquote quote +++)
-    [(_ (e) (p))
-     (list (Check e p))]
-    [(_ e (unquote p))
-     (quote e)]
-    [(_ e p)
-     (if (equal? (quote e) (quote p))
-         (quote e)
-         #f)]
-    [(_ e ...)
-     (error 'Check "You shouldn't even be able to get this error message. What the shit...")]))
+(define Valid?
+  (lambda (x y)
+    (not (or (pair? x) (pair? y)))))
+
+(define Match?
+  (lambda (x y)
+    (equal? x y)))
