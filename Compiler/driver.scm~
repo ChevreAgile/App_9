@@ -1,0 +1,8 @@
+
+(load "./../eMatch/eMatch.scm")
+
+(define (Compile program)
+  (with-output-to-file "Assembly.s"
+    (lambda ()
+      (printf "check it"))))
+
