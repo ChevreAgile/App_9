@@ -33,14 +33,28 @@
 ;          (else 8))
 ;=> 8
 
-;Example 5: '+++' is the symbol for continuing the list, so if the list contains +++ it assumes you don't
+;Example 5: '***' is the symbol for continuing the list, so if the list contains +++ it assumes you don't
 ;           care about whatever else is in the list
 ;> (eMatch (lambda (x y z) z)
 ;          ((lambda (z) z) 5)
-;          ((lambda (x +++) z) 6)
+;          ((lambda (x ***) z) 6)
 ;          ((lambda (y) y) 7)
 ;          (else 8))
 ;=> 6
+
+;Example 6: "Wild-card" variables allow you to account for variables with a designation you are not yet aware of
+;> (eMatch (lambda (x) 94)
+;          ((lambda (x) ,j) 3))
+;=> 3
+
+;Example 6: I've added "wild-card" variable binding so that you can use "wild-card" variables from the
+;           pattern expression in the successful-match expression
+;> (eMatch (lambda (x y z) 98)
+;          ((lambda (z) z) 5)
+;          ((lambda (x y z) ,a) a)
+;          ((lambda (y) y) 7)
+;          (else 8))
+;=> 98
 
 
 (define-syntax eMatch
