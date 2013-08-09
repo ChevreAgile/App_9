@@ -57,21 +57,21 @@
 
 
 (define-syntax eMatch
-  (syntax-rules (req else)
+  (syntax-rules (req else quote)
     [(_ expr)
      (error 'eMatch "Sooo... You, uh, you messed up something... No match man...")]
     [(_ expr (else e0 e1 ...))
      (begin e0 e1 ...)]
     [(_ expr (else e0))
      e0]
-    [(_ expr (p0 (req cl ...) f ...) e ...)
-     (let ((cont (lambda () (eMatch expr e ...))))
+    [(_ (e0 e1 ...) (p0 (req cl ...) f ...) e ...)
+     (let ((cont (lambda () (eMatch (e0 e1 ...) e ...))))
        (if (and cl ...)
-           (eMatch-H expr p0 (begin f ...) cont)
+           (eMatch-H (e0 e1 ...) p0 (begin f ...) cont)
            cont))]
-    [(_ expr (p0 f ...) e ...)
-     (let ((cont (lambda () (eMatch expr e ...))))
-       (eMatch-H expr p0 (begin f ...) cont))]
+    [(_ (e0 e1 ...) (p0 f ...) e ...)
+     (let ((cont (lambda () (eMatch (e0 e1 ...) e ...))))
+       (eMatch-H (e0 e1 ...) p0 (begin f ...) cont))]
     [(_ e ...)
      (error 'eMatch "Wow, there are so many different ways you could succeed. And yet you fail...")]))
 
