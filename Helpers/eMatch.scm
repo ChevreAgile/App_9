@@ -65,23 +65,60 @@
     [(_ expr (else e0))
      e0]
     [(_ (e0 e1 ...) (p0 (req cl ...) f ...) e ...)
-     (let ((cont (lambda () (eMatch (e0 e1 ...) e ...))))
+     (let ((cont (lambda () (_ (e0 e1 ...) e ...))))
        (if (and cl ...)
            (eMatch-H (e0 e1 ...) p0 (begin f ...) cont)
            cont))]
     [(_ (e0 e1 ...) (p0 f ...) e ...)
      (let ((cont (lambda () (eMatch (e0 e1 ...) e ...))))
        (eMatch-H (e0 e1 ...) p0 (begin f ...) cont))]
+    [(_ var (p0 (req cl ...) f ...) e ...)
+     (let ((cont (lambda () (eMatch var e ...))))
+       (if (and cl ...)
+           (eMatch-V var p0 (begin f ...) cont)
+           cont))]
+    [(_ var (p0 f ...) e ...)
+     (let ((cont (lambda () (eMatch var e ...))))
+       (eMatch-V var p0 (begin f ...) cont))]
     [(_ e ...)
      (error 'eMatch "Wow, there are so many different ways you could succeed. And yet you fail...")]))
 
+(define-syntax eMatch-V
+  (syntax-rules (quote *** unquote)
+    [(_ var ((unquote p0) *** p1 ...) f cont)
+     (if (pair? var)
+         (let ((p0 var)) f)
+         (cont))]
+    [(_ var (unquote p0) f cont)
+     (let ((p0 var)) f)]
+    [(_ var ((unquote p0) p1 ...) f cont)
+     (if (pair? var)
+         (let ((a (car var)) (d (cdr var)))
+           (eMatch-V d (p1 ...) (let ((p0 a)) f) cont))
+         (cont))]
+    [(_ var (p0 p1 ...) f cont)
+     (if (pair? var)
+         (let ((a (car var)) (d (cdr var)))
+           (let ((result (eMatch-V a p0 (eMatch-V d (p1 ...) f (lambda () 'M-F)) (lambda () 'M-F))))
+             (if (equal? result 'M-F)
+                 (cont)
+                 result)))
+         (cont))]
+    [(_ var p0 f cont)
+     (if (equal? var (quote p0))
+         f
+         (cont))]))
+
+
 (define-syntax eMatch-H
   (syntax-rules (quote *** unquote)
-    [(_ (e0 e1 ...) ((unquote p0) *** p1 ...) f cont)
-     (let ((p0 (list e0 e1 ...))) f)]
+    [(_ (e0 ...) ((unquote p0) *** p1 ...) f cont)
+     (let ((p0 (quote (e0 ...)))) f)]
+    [(_ (e0 e1 ...) ((unquote p0) p1 ...) f cont)
+     (eMatch-H (e1 ...) (p1 ...) (let ((p0 e0)) f) cont)]
     [(_ (e0 e1 ...) (p0 p1 ...) f cont)
-     (if (Valid? (quote e0) (quote p0))
-         (if (Match? (quote e0) (quote p0))
+     (if (not (or (pair? (quote e0)) (pair? (quote p0))))
+         (if (equal? (quote e0) (quote p0))
              (eMatch-H (e1 ...) (p1 ...) f cont)
              (cont))
          (let ((result (eMatch-H e0 p0 (eMatch-H (e1 ...) (p1 ...) f (lambda () 'M-F)) (lambda () 'M-F))))
@@ -89,9 +126,9 @@
                (cont)
                result)))]
     [(_ e0 (unquote p0) f cont)
-     (let ((p0 e0)) f)]
+     (let ((p0 (quote e0))) f)]
     [(_ e0 p0 f cont)
-     (if (Match? (quote e0) (quote p0))
+     (if (equal? (quote e0) (quote p0))
          f
          (cont))]))
 
