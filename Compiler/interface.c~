@@ -1,0 +1,27 @@
+#include <stdio.h>
+
+extern long App_9_func(void);
+
+void SpecialChar(long num);
+
+int main() {
+
+  if (App_9_func >= 8) {
+    printf("%d\n", App_9_func \ 8);
+  } else {
+    SpecialChar(App_9_func);
+  }
+
+}
+
+void SpecialChar(long num) {
+
+  char[][] characters = {"false", "true"}
+  
+  if (num == 0) {
+    printf("%s\n", characters[0]);
+  } else {
+    printf("%s\n", characters[1]);
+  }
+
+}

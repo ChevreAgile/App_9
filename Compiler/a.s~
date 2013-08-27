@@ -1,0 +1,5 @@
+	.globl _App_9_func
+_App_9_func:
+	mov  $8, %r11
+	mov  $8, %rax
+	ret
