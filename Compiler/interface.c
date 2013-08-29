@@ -6,12 +6,15 @@ void SpecialChar(long num);
 
 int main() {
 
-  if (*App_9_func >= 8) {
-    long newValue = (long)*App_9_func / 8;
+  long n = App_9_func();
+  
+  if (n >= 8) {
+    long newValue = (long) n / 8;
     printf("%ld\n", newValue);
   } else {
-    SpecialChar(*App_9_func);
+    SpecialChar(n);
   }
+  
 
   return 0;
 
@@ -19,7 +22,7 @@ int main() {
 
 void SpecialChar(long num) {
 
-  char characters[2][2] = { "#f", "#t" };
+  char *characters[] = {"#f", "#t"};
   
   if (num == 0) {
     printf("%s\n", characters[0]);

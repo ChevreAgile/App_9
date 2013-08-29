@@ -10,7 +10,7 @@ _App_9_func:
 	    movq %rsi, %rdx
 	    leaq _App_9_func_exit(%rip), %r15
 	    movq %r15, %rcx
-	    movq $48, %rax
+	    movq $0, %rax
 	    jmp *%rcx
 _App_9_func_exit:
 	    popq %r15

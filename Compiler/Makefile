@@ -3,7 +3,9 @@ CC = gcc
 CFLAGS = -o
 
 comp:
-	$(CC) $(CFLAGS) a a.s interface.c
+	gcc -c a.s
+	gcc -c interface.c
+	gcc -o a a.o interface.o
 
 clean:
 	rm -f a
